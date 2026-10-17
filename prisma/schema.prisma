@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ReleaseReport {
+  id                 String   @id @default(cuid())
+  repoName           String   @map("repo_name")
+  version            String
+  hasBreakingChanges Boolean  @map("has_breaking_changes")
+  summary            String   @db.Text
+  keyChanges         String[] @map("key_changes")
+  urgency            String
+  publishedAt        DateTime @map("published_at")
+  htmlUrl            String   @map("html_url")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@unique([repoName, version])
+  @@map("release_reports")
+}
